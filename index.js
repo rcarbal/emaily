@@ -10,8 +10,9 @@ passport.use(new GoogleStrategy({
     clientID: keys.googleClientID,
     clientSecret: keys.gogoleClientSecret,
     callbackURL: '/auth/google/callback'
-}, (accessToken)=> {
+}, (accessToken, refreshToken, profile, done)=> {
     console.log(accessToken);
+    
 }));
 
 app.get('/auth/google', passport.authenticate('google', {
