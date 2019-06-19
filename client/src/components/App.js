@@ -9,7 +9,12 @@ const Landing = () => <h2>Landing</h2>
 const App = () => {
     return (
         <div>
-            Hi there!
+            <BrowserRouter>
+                <div>
+                    <Route exact={true} path="/" component={Landing}/>
+                    <Route exact={true} path="/surveys" component={Dashboard} />
+                </div>
+            </BrowserRouter>
         </div>
     )
 }
