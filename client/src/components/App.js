@@ -6,19 +6,21 @@ const Dashboard = () => <h2>Dashboard</h2>
 const SurveyNew = () => <h2>SurveyNew</h2>
 const Landing = () => <h2>Landing</h2>
 
-const App = () => {
-    return (
-        <div>
-            <BrowserRouter>
-                <div className="container">
-                    <Header />
-                    <Route exact={true} path="/" component={Landing}/>
-                    <Route exact={true} path="/surveys" component={Dashboard} />
-                    <Route exact={true} path="/surveys/new" component={SurveyNew} />
-                </div>
-            </BrowserRouter>
-        </div>
-    )
-}
+class App extends React.Component {
+    render() {
+        return (
+            <div>
+                <BrowserRouter>
+                    <div className="container">
+                        <Header />
+                        <Route exact={true} path="/" component={Landing} />
+                        <Route exact={true} path="/surveys" component={Dashboard} />
+                        <Route exact={true} path="/surveys/new" component={SurveyNew} />
+                    </div>
+                </BrowserRouter>
+            </div>
+        );
+    }
+};
 
 export default App;
