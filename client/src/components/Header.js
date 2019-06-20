@@ -2,14 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 class Header extends React.Component {
-    renderContent(){
-        switch(this.props.auth){
+    renderContent() {
+        switch (this.props.auth) {
             case null:
-                return 'Still Deciding';
+                return;
             case false:
-                return 'Im Loggedout';
+                return (<li>
+                        <a href="/auth/google">Login With Google</a>
+                    </li>);
+
             default:
-                return 'Im logged IN';
+                return <li><a>Logout</a></li>;
         }
     }
 
@@ -30,7 +33,7 @@ class Header extends React.Component {
 
 }
 
-function mapStatueToProps(state){
+function mapStatueToProps(state) {
     return { auth: state.auth }
 }
 
