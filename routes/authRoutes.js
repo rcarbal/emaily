@@ -13,6 +13,9 @@ app.get('/api/logout', (req, res) =>{
 });
 
 app.get('/api/current_user', (req, res) => {
+    console.log("==========================================================================================================");
+    console.log("HTTP GET REQUEST /api/current_user")
+    console.log(req.user);
     res.send(req.user);
 });
 }
