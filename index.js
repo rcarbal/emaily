@@ -6,6 +6,8 @@ const key = require('./config/keys');
 require('./models/User');
 require('./services/passport');
 
+mongoose.connect(key.mongoURI, { useNewUrlParser: true })
+
 const app = express();
 
 app.use(
@@ -17,8 +19,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(key.mongoURI, { useNewUrlParser: true })
+
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
