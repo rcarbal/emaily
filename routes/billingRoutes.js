@@ -1,15 +1,18 @@
-const keys = require('../config/keys');
-const stripe = require('stripe')(keys.stripeSecretKey)
+const charge = require('./charge');
+const save = require('./save');
 
 module.exports = app => {
-    app.post('/api/stripe', async (req, res) => {
-        const charge = await stripe.charges.create({
-            amount: 500,
-            currency: 'usd',
-            description: '$5 for 5 credits',
-            source: req.body.id
-        });
+    app.post('/api/stripe', async (req, response) => {
+        console.log("===================================================");
+        console.log("HTTTP POST REQUEST /api/stripe");
+        const result = await charge();
 
-        console.log(charge);
+        const user = req.user;
+        user["credits"] += 5;
+        await save(user);
+       
+        response.send(user);
+
+        
     });
-};
+}
