@@ -14,4 +14,4 @@ const surverySchema = new Schema({
     lastResponded: Date
 });
 
-mongoose.model('surverys', surverySchema);
+mongoose.model('surveys', surverySchema);
