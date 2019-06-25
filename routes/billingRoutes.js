@@ -6,15 +6,15 @@ module.exports = app => {
     app.post('/api/stripe',requireLogin, async (req, response) => {
         console.log("===================================================");
         console.log("HTTTP POST REQUEST /api/stripe");
-        
+        console.log(req.user);
+        console.log(req.body);
+
         const result = await charge();
 
         const user = req.user;
         user["credits"] += 5;
         await save(user);
        
-        response.send(user);
-
-        
+        response.send(user);        
     });
 }
