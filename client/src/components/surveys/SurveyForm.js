@@ -39,6 +39,17 @@ class SurveyForm extends React.Component {
     }
 };
 
+function validate(values){ // These values are comming off the form
+    const errors ={};
+
+    if (!values.title){
+        errors.title = 'You must provide a title';
+    }
+
+    return errors;
+}
+
 export default reduxForm({
+    validate: validate,
     form: 'surveyForm'
 })(SurveyForm);
