@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const express = require('express');
-const router = express.Router();
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredit');
 const Mailer = require('../services/Mailer');
@@ -9,41 +7,42 @@ const { saveSurvey } = require('./save')
 
 const Survey = mongoose.model('surveys');
 
-router.get('/api/surveys', (req, res)=>{
-    res.send('Thanks so much for voting');
-});
+module.exports = app => {
 
-router.post('/api/surveys/thanks', requireLogin, requireCredits, async (req, res) => {
-    const { title, subject, body, recipients } = req.body;
-
-    const survey = new Survey({
-        title,
-        subject,
-        body,
-        recipients: recipients.split(',').map(email => ({ email: email.trim() })),
-        _user: req.user.id,
-        dateSent: Date.now()
+    app.get('/api/surveys', (req, res) => {
+        res.send('Thanks so much for voting');
     });
 
-    // Great place to send an email.
-    const mailer = new Mailer(survey, surveyTemplate(survey));
-    try {
-        await mailer.send(()=>{
-            console.log('Mail Sent');
+    app.post('/api/surveys/thanks', requireLogin, requireCredits, async (req, res) => {
+        const { title, subject, body, recipients } = req.body;
+
+        const survey = new Survey({
+            title,
+            subject,
+            body,
+            recipients: recipients.split(',').map(email => ({ email: email.trim() })),
+            _user: req.user.id,
+            dateSent: Date.now()
         });
-    } catch (err) {
-        res.status(422).send(err);
-    }
-    let callback = async () =>{
-        req.user.credits -= 1;
-        const user = await req.user.save();
-        res.send(user);
 
-    }
+        // Great place to send an email.
+        const mailer = new Mailer(survey, surveyTemplate(survey));
+        try {
+            await mailer.send(() => {
+                console.log('Mail Sent');
+            });
+        } catch (err) {
+            res.status(422).send(err);
+        }
+        let callback = async () => {
+            req.user.credits -= 1;
+            const user = await req.user.save();
+            res.send(user);
 
-    saveSurvey(survey, callback);
+        }
 
-});
+        saveSurvey(survey, callback);
 
+    });
 
-module.exports = router;
+}

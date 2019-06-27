@@ -1,22 +1,21 @@
-const express = require('express');
-const router = express.Router();
 const charge = require('./charge');
 const { saveUser } = require('./save');
 const requireLogin = require('../middlewares/requireLogin');
 
-router.post('/api/stripe', requireLogin, async (req, response) => {
-    console.log("===================================================");
-    console.log("HTTTP POST REQUEST /api/stripe");
-    console.log(req.user);
-    console.log(req.body);
+module.exports = app => {
 
-    const result = await charge();
+    app.post('/api/stripe', requireLogin, async (req, response) => {
+        console.log("===================================================");
+        console.log("HTTTP POST REQUEST /api/stripe");
+        console.log(req.user);
+        console.log(req.body);
 
-    const user = req.user;
-    user["credits"] += 5;
-    await saveUser(user);
+        const result = await charge();
 
-    response.send(user);
-});
+        const user = req.user;
+        user["credits"] += 5;
+        await saveUser(user);
 
-module.exports = router;
+        response.send(user);
+    });
+}
