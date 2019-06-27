@@ -56,5 +56,6 @@ function validate(values){ // These values are comming off the form
 
 export default reduxForm({
     validate: validate,
-    form: 'surveyForm'
+    form: 'surveyForm',  // Tells redux-form how to manage the data. This is the key inside form data
+    destroyOnUnmount: false
 })(SurveyForm);
