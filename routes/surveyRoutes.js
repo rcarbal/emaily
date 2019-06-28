@@ -9,11 +9,12 @@ const Survey = mongoose.model('surveys');
 
 module.exports = app => {
 
-    app.get('/api/surveys', (req, res) => {
+    app.get('/api/surveys/thanks', (req, res) => {
         res.send('Thanks so much for voting');
     });
 
-    app.post('/api/surveys/thanks', requireLogin, requireCredits, async (req, res) => {
+    app.post('/api/surveys', requireLogin, requireCredits, (req, res) => {
+        console.log("Inside POST /api/surveys")
         const { title, subject, body, recipients } = req.body;
 
         const survey = new Survey({
@@ -26,23 +27,32 @@ module.exports = app => {
         });
 
         // Great place to send an email.
-        const mailer = new Mailer(survey, surveyTemplate(survey));
-        try {
-            await mailer.send(() => {
-                console.log('Mail Sent');
-            });
-        } catch (err) {
-            res.status(422).send(err);
-        }
-        let callback = async () => {
-            req.user.credits -= 1;
-            const user = await req.user.save();
-            res.send(user);
-
-        }
-
-        saveSurvey(survey, callback);
-
+        sendMail(survey)
+            .then((data) => {
+                console.log(data);
+                console.log("Deduction from user ===========================");
+                saveSurvey(survey);
+                req.user.credits -= 1;
+                const user = req.user;
+                user.save();
+                res.send(user);
+            })
     });
 
+    function sendMail(survey) {
+        return new Promise((resolve, reject) => {
+            console.log("Sending Mail==============================");
+            const mailer = new Mailer(survey, surveyTemplate(survey));
+            try {
+                mailer.send(() => {
+                    console.log('Mail has been sent Sent');
+                    
+                });
+                console.log('Mail Sent');
+                resolve(true);
+            } catch (err) {
+                res.status(422).send(err);
+            }
+        });
+    }
 }

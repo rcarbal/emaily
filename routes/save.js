@@ -10,13 +10,12 @@ function saveUser (user){
     });
 };
 
-function saveSurvey(survey, callback){
+function saveSurvey(survey){
     survey.save((err, survey)=>{
             if(err){
                 console.log(err)
             }else{
                 console.log("Survey Saved");
-                callback();
             }
     });
 };
